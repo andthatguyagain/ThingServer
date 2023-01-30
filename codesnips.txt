@@ -1,0 +1,61 @@
+
+quint16 ThingServer::find_port(QMap<QString, QWebSocket *> &port_map, quint16 range_start, quint16 range_end)
+    {
+        /**
+          for(quint16 i=range_start;i<range_end;i++)
+            {
+                if(!port_map.contains(i))
+                    {
+                        return(i);
+                    }
+            }
+       **/
+
+        QMap<QString, QWebSocket *>::Iterator n;
+        for(quint16 i=range_start;i<range_end;i++)
+            {
+                for (n=port_map.begin(); n!=port_map.end();++n)
+                    {
+                        if(n.value()->localPort()!=i)
+                            {
+                                return i;
+                            }
+                    }
+            }
+
+        return 0;
+    }
+
+void ThingServer::redirect_connetion()
+    {
+        quint16 available_port=0;
+
+        if(dev_type.compare(ACTIVE)==0)
+            {
+                ///place in actives map
+                available_port=find_port(m_active_clients,ACTIVES_PRANGE_START,ACTIVES_PRANGE_END);
+            }
+        else if(dev_type.compare(CNTRL)==0)
+            {
+                ///place in controls map
+                available_port=find_port(m_control_clients,CNTRL_PRANGE_START,CNTRL_PRANGE_END);
+            }
+        if(available_port!=0)
+            {
+                ///send reconect instructions
+                send_reconnet(temp_client,available_port);
+            }
+        else
+            {
+                qDebug()<<"error no port available";
+                temp_client->close();
+            }
+    }
+
+void ThingServer::send_reconnet(QWebSocket * m_socket,quint16 port)
+    {
+        QString instr="reconnect";
+        instr.append(DELIMIT);
+        instr.append(QString::number(port));
+        m_socket->sendTextMessage(instr);
+    }

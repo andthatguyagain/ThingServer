@@ -1,0 +1,47 @@
+communication format
+
+
+":" denotes the delimiter between tokens
+
+from id is the source (request emiter)
+to id is the receiver (request receiver)
+
+name must be unique for each thing. note the delimiter must not be part of the message
+
+general structure is like:
+
+request:thing_type:thing_name:destination_thing_name:data_to_send
+
+ "request" is an operation instruction to be executed by  the server
+
+operations
+
+request connection: client sends upon opening socket
+
+AUTH:thing_type:thing_name
+
+
+commands and info exchange:
+
+
+SEND:from_name:to_name:instruction:data
+
+ask for data
+
+ASK:from_name:to_name:instruction:data
+
+
+instructions to things are( for now )
+
+SET  value of pin
+
+GET value of pin
+
+
+todo:
+
+need a set of server isnstructions and parser
+
+server instructions begin with #
+
+general structure is similar to thing instructions
