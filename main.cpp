@@ -1,5 +1,5 @@
-///Code release under GPL3
-
+///Code under GPL3
+///
 
 #include <QCoreApplication>
 #include "thingserver.h"
